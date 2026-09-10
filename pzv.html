@@ -417,7 +417,7 @@
     }
     .modal-close:hover { color: var(--text-primary); transform: rotate(90deg); }
 
-    /* ===== СТИЛЬНЫЕ ОЦЕНКИ КАРТОЧКИ ===== */
+    /* ===== СТИЛЬНЫЕ ОЦЕНКИ ===== */
     .score-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -457,7 +457,7 @@
       opacity: 0.7;
     }
 
-    /* Мини-калькулятор в модалке */
+    /* Мини-калькулятор */
     .modal-calc {
       margin-top: 16px;
       padding-top: 16px;
@@ -554,7 +554,7 @@
     .comment-actions button:hover { background: var(--card-bg); color: var(--text-primary); }
     .comment-actions button.danger:hover { background: #fecaca; color: #991b1b; border-color: #fecaca; }
 
-    /* Модалка рейтинга */
+    /* Рейтинг */
     .rating-period-tabs {
       display: flex;
       gap: 6px;
@@ -575,6 +575,7 @@
       font-weight: 600;
       font-size: 14px;
       transition: 0.15s;
+      font-family: inherit;
     }
     .rating-period-tab.active { background: var(--tab-active); color: var(--text-primary); }
 
@@ -634,7 +635,7 @@
     }
     .top-item .top-score small { font-size: 0.55em; opacity: 0.6; font-weight: 500; }
 
-    /* ===== КРИТЕРИИ ===== */
+    /* Критерии */
     .criteria-item { margin-bottom: 16px; border-left: 4px solid var(--corrector-border); padding-left: 14px; }
     .criteria-item h4 { margin: 0 0 4px; color: var(--text-primary); font-size: 17px; }
     .criteria-item p { margin: 4px 0; color: var(--text-secondary); font-size: 15px; line-height: 1.5; }
@@ -645,6 +646,56 @@
     body.dark .criteria-item .range-label.max { background: #14532d; color: #86efac; }
 
     .footer { margin-top: 18px; font-size: 13px; color: var(--text-muted); text-align: center; border-top: 1px solid var(--border-color); padding-top: 16px; }
+
+    /* ===== АВТОРИЗАЦИЯ: табы и поля ===== */
+    .auth-method-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--tab-bg);
+      border-radius: 30px;
+      padding: 4px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 16px;
+    }
+    .auth-method-tab {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      color: var(--tab-text);
+      border-radius: 24px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.15s;
+      font-family: inherit;
+    }
+    .auth-method-tab.active {
+      background: var(--tab-active);
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .auth-input {
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 16px;
+      font-family: inherit;
+      width: 100%;
+    }
+    .auth-input:focus {
+      outline: 2px solid var(--btn-bg);
+      border-color: transparent;
+    }
+    .auth-input::placeholder { color: var(--text-muted); }
+    #recaptcha-container { min-height: 0; }
 
     /* ===== АДАПТИВ ===== */
     @media (max-width: 768px) {
@@ -705,7 +756,6 @@
 <body>
 <div class="container">
 
-  <!-- ШАПКА -->
   <div class="header">
     <h1>🍑 ПОПКИ ЗА ВОЗБУЖДАЕМОСТЬ</h1>
     <div class="header-actions">
@@ -719,7 +769,6 @@
     </div>
   </div>
 
-  <!-- ВКЛАДКИ -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="calculator">📊 Калькулятор</button>
     <button class="tab-btn" data-tab="archive">📁 Архив</button>
@@ -727,7 +776,6 @@
     <button class="tab-btn" data-tab="rating">🏆 Рейтинг</button>
   </div>
 
-  <!-- КАЛЬКУЛЯТОР -->
   <div class="tab-content active" id="tab-calculator">
     <div class="card-creator">
       <div class="card-creator-title" id="creatorTitle">📝 Новая карточка</div>
@@ -763,7 +811,6 @@
     <div class="breakdown" id="breakdown"></div>
   </div>
 
-  <!-- АРХИВ -->
   <div class="tab-content" id="tab-archive">
     <div class="library-controls">
       <h2>📁 Мои карточки</h2>
@@ -782,7 +829,6 @@
     </div>
   </div>
 
-  <!-- ДОСКА -->
   <div class="tab-content" id="tab-board">
     <div class="library-controls">
       <h2>📋 Все карточки</h2>
@@ -801,7 +847,6 @@
     </div>
   </div>
 
-  <!-- РЕЙТИНГ -->
   <div class="tab-content" id="tab-rating">
     <div class="library-controls">
       <h2>🏆 Топ-10 карточек</h2>
@@ -819,7 +864,6 @@
   <div class="footer">Клик по карточке открывает подробности</div>
 </div>
 
-<!-- МОДАЛЬНЫЕ ОКНА -->
 <div class="modal-overlay" id="criteriaModal">
   <div class="modal-content">
     <h2>📋 Критерии оценки <button class="modal-close" id="closeCriteriaBtn">&times;</button></h2>
@@ -828,18 +872,39 @@
 </div>
 
 <div class="modal-overlay" id="authModal">
-  <div class="modal-content" style="max-width:420px; position:relative;">
+  <div class="modal-content" style="max-width:440px; position:relative;">
     <h2 style="margin-top:0;">🔐 Вход / Регистрация</h2>
-    <div style="display:flex; flex-direction:column; gap:12px;">
-      <input type="email" id="authEmail" placeholder="Email" style="padding:12px; border-radius:10px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text-primary); font-size:16px;">
-      <input type="password" id="authPassword" placeholder="Пароль" style="padding:12px; border-radius:10px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text-primary); font-size:16px;">
-      <input type="text" id="authNickname" placeholder="Никнейм" style="padding:12px; border-radius:10px; border:1px solid var(--border-color); background:var(--input-bg); color:var(--text-primary); font-size:16px;">
+
+    <div class="auth-method-tabs">
+      <button class="auth-method-tab active" data-method="email">📧 Email</button>
+      <button class="auth-method-tab" data-method="phone">📱 Телефон</button>
+    </div>
+
+    <div class="auth-form" id="authFormEmail">
+      <input type="email" id="authEmail" placeholder="Email" class="auth-input">
+      <input type="password" id="authPassword" placeholder="Пароль" class="auth-input">
+      <input type="text" id="authNickname" placeholder="Никнейм (только при регистрации)" class="auth-input">
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="btn" id="authLoginBtn">Войти</button>
         <button class="btn btn-outline" id="authRegisterBtn">Зарегистрироваться</button>
       </div>
-      <div id="authMessage" style="color:#ef4444; font-size:14px;"></div>
     </div>
+
+    <div class="auth-form" id="authFormPhone" style="display:none;">
+      <input type="tel" id="authPhone" placeholder="+7 999 123-45-67" class="auth-input">
+      <button class="btn" id="authPhoneSendBtn">📨 Отправить код</button>
+
+      <div id="phoneCodeSection" style="display:none; flex-direction:column; gap:10px;">
+        <input type="text" id="authPhoneCode" placeholder="Код из SMS" class="auth-input" maxlength="6" inputmode="numeric">
+        <input type="text" id="authPhoneNickname" placeholder="Никнейм (если новый аккаунт)" class="auth-input">
+        <button class="btn" id="authPhoneVerifyBtn">✅ Подтвердить код</button>
+        <button class="btn btn-outline" id="authPhoneBackBtn" type="button">← Изменить номер</button>
+      </div>
+
+      <div id="recaptcha-container"></div>
+    </div>
+
+    <div id="authMessage" style="color:#ef4444; font-size:14px; margin-top:8px; min-height:20px;"></div>
     <button class="modal-close" id="closeAuthBtn" style="position:absolute; top:15px; right:20px;">&times;</button>
   </div>
 </div>
@@ -858,7 +923,6 @@
   </div>
 </div>
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -900,7 +964,7 @@
   //   КРИТЕРИИ
   // ============================================================
   const criteriaHTML = `
-    <div class="criteria-item"><h4>1. РАЗМЕР</h4><p><strong>Что это:</strong> объём ягодиц относительно общей компекции тела.</p><p><span class="range-label min">0–3</span> – плоские, почти не выделяются, сливаются с бёдрами.</p><p><span class="range-label">4–6</span> – средний объём, умеренная выпуклость.</p><p><span class="range-label">7–8</span> – крупные, но гармоничные, заметно выступают.</p><p><span class="range-label max">9–10</span> – идеально пропорциональный телу объём.</p></div>
+    <div class="criteria-item"><h4>1. РАЗМЕР</h4><p><strong>Что это:</strong> объём ягодиц относительно общей комплекции тела.</p><p><span class="range-label min">0–3</span> – плоские, почти не выделяются, сливаются с бёдрами.</p><p><span class="range-label">4–6</span> – средний объём, умеренная выпуклость.</p><p><span class="range-label">7–8</span> – крупные, но гармоничные, заметно выступают.</p><p><span class="range-label max">9–10</span> – идеально пропорциональный телу объём.</p></div>
     <div class="criteria-item"><h4>2. ФОРМА</h4><p><strong>Что это:</strong> геометрия контура при взгляде сзади.</p><p><span class="range-label min">0–3</span> – бесформенная, расплывчатая.</p><p><span class="range-label">4–6</span> – средняя, есть лёгкая квадратность.</p><p><span class="range-label">7–8</span> – красивая округлая.</p><p><span class="range-label max">9–10</span> – идеальный овал.</p></div>
     <div class="criteria-item"><h4>3. ПОДВИЖНОСТЬ</h4><p><strong>Что это:</strong> поведение при ходьбе + плотность.</p><p><span class="range-label min">0–3</span> – сильно колышется или жёсткая без динамики.</p><p><span class="range-label">4–6</span> – умеренная волна.</p><p><span class="range-label">7–8</span> – заметная динамика.</p><p><span class="range-label max">9–10</span> – полная гармония.</p></div>
     <div class="criteria-item"><h4>4. ВЫСОТА</h4><p><strong>Что это:</strong> уровень подъягодичной складки.</p><p><span class="range-label min">0–3</span> – опущена низко.</p><p><span class="range-label">4–6</span> – среднее положение.</p><p><span class="range-label">7–8</span> – выше среднего.</p><p><span class="range-label max">9–10</span> – максимально высокая.</p></div>
@@ -979,7 +1043,7 @@
       cardId,
       userId,
       userNickname,
-      score, // 0-90
+      score,
       comment: comment || '',
       isAdmin,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -1020,7 +1084,7 @@
   }
 
   // ============================================================
-  //   ОТОБРАЖЕНИЕ ДОСКИ
+  //   ДОСКА
   // ============================================================
   function renderBoard(cards) {
     const grid = document.getElementById('boardGrid');
@@ -1084,9 +1148,8 @@
     grid.querySelectorAll('.delete-board-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const id = btn.dataset.id;
         if (confirm('Удалить эту карточку?')) {
-          deleteCardFirestore(id).then(() => loadAllCards()).catch(err => alert('Ошибка удаления: ' + err.message));
+          deleteCardFirestore(btn.dataset.id).then(() => loadAllCards()).catch(err => alert('Ошибка: ' + err.message));
         }
       });
     });
@@ -1099,7 +1162,7 @@
   }
 
   // ============================================================
-  //   ОТОБРАЖЕНИЕ АРХИВА
+  //   АРХИВ
   // ============================================================
   function renderArchive(cards) {
     const grid = document.getElementById('archiveGrid');
@@ -1162,9 +1225,8 @@
     grid.querySelectorAll('.delete-archive-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const id = btn.dataset.id;
         if (confirm('Удалить эту карточку?')) {
-          deleteCardFirestore(id).then(() => loadAllCards()).catch(err => alert('Ошибка удаления: ' + err.message));
+          deleteCardFirestore(btn.dataset.id).then(() => loadAllCards()).catch(err => alert('Ошибка: ' + err.message));
         }
       });
     });
@@ -1177,7 +1239,7 @@
   }
 
   // ============================================================
-  //   РЕЙТИНГ (ТОП-10)
+  //   РЕЙТИНГ
   // ============================================================
   let currentRatingPeriod = 'all';
 
@@ -1192,7 +1254,6 @@
     const yearAgo = now - 365 * 24 * 60 * 60 * 1000;
     const monthAgo = now - 30 * 24 * 60 * 60 * 1000;
 
-    // Фильтр по периоду (по дате карточки)
     let filtered = allCards.filter(c => {
       if (currentRatingPeriod === 'all') return true;
       const t = c.createdAt?.seconds ? c.createdAt.seconds * 1000 : 0;
@@ -1201,19 +1262,16 @@
       return true;
     });
 
-    // Получаем все оценки для отфильтрованных карточек
     const promises = filtered.map(card =>
       getCardRatings(card.id).then(ratings => ({ card, ratings }))
     );
 
     Promise.all(promises).then(results => {
-      // Считаем среднюю (без админа)
       const withAvg = results.map(({ card, ratings }) => {
         const userRatings = ratings.filter(r => r.isAdmin === false);
         const adminRatings = ratings.filter(r => r.isAdmin === true);
         const userAvg = userRatings.length > 0 ? (userRatings.reduce((s,r) => s + (r.score||0), 0) / userRatings.length) : null;
         const adminAvg = adminRatings.length > 0 ? (adminRatings.reduce((s,r) => s + (r.score||0), 0) / adminRatings.length) : null;
-        // Итоговая для рейтинга: средняя пользователей, если нет — админ
         const displayScore = userAvg !== null ? userAvg : adminAvg;
         return { card, userAvg, adminAvg, displayScore, count: userRatings.length };
       }).filter(x => x.displayScore !== null);
@@ -1256,7 +1314,6 @@
     });
   }
 
-  // Переключение периода
   document.querySelectorAll('.rating-period-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.rating-period-tab').forEach(b => b.classList.remove('active'));
@@ -1267,7 +1324,7 @@
   });
 
   // ============================================================
-  //   МОДАЛЬНОЕ ОКНО ПРОСМОТРА КАРТОЧКИ
+  //   МОДАЛЬНОЕ ОКНО КАРТОЧКИ
   // ============================================================
   function openCardModal(cardId) {
     const card = allCards.find(c => c.id === cardId);
@@ -1292,7 +1349,6 @@
       const total = Math.round(card.total);
       const isGold = total === 90;
 
-      // Стильные карточки оценок
       let html = `
         ${card.avatar ? `<img src="${card.avatar}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; display:block; margin:0 auto 8px; border:3px solid var(--border-color);">` : `<div style="text-align:center; font-size:48px; margin-bottom:8px;">🍑</div>`}
         <div style="text-align:center; color:var(--text-secondary); font-size:15px; margin-bottom:14px;">👤 Автор: <strong style="color:var(--nickname-color);">${escapeHtml(card.createdByNickname || 'Неизвестный')}</strong></div>
@@ -1313,7 +1369,6 @@
         </div>
       `;
 
-      // Список оценок/комментариев
       if (ratings.length > 0) {
         const sortedRatings = [...ratings].sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
         html += `<div class="comments-list"><div class="comments-title">💬 Оценки и комментарии (${ratings.length})</div>`;
@@ -1336,7 +1391,6 @@
         html += `</div>`;
       }
 
-      // Форма оценки (если авторизован, не автор, и не админ может оценить тоже свою? нет)
       if (currentUser) {
         if (isAuthor) {
           html += `<div style="text-align:center; margin-top:16px; padding:14px; background:var(--card-bg); border-radius:12px; color:var(--text-secondary); font-size:15px;">✋ Вы не можете оценивать свою карточку</div>`;
@@ -1363,7 +1417,6 @@
 
       body.innerHTML = html;
 
-      // Инициализация слайдеров
       if (currentUser && !isAuthor) {
         const modalSliders = [];
         const modalConfig = [
@@ -1380,9 +1433,6 @@
           bottom: document.getElementById('modal-row-bottom')
         };
         Object.values(rows).forEach(r => r.innerHTML = '');
-
-        // Если есть моя старая оценка — не восстановим значения, ставим по 5
-        // (можно было бы сохранить values в rating, но пока не делаем)
 
         modalConfig.forEach((item, idx) => {
           const isCorrector = (idx === 5);
@@ -1438,13 +1488,10 @@
         });
       }
 
-      // Удаление своей оценки
       body.querySelectorAll('.delete-rating-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const cardId2 = btn.dataset.cardId;
-          const userId2 = btn.dataset.userId;
           if (confirm('Удалить вашу оценку?')) {
-            deleteRating(cardId2, userId2)
+            deleteRating(btn.dataset.cardId, btn.dataset.userId)
               .then(() => { closeCardModal(); loadAllCards(); })
               .catch(err => alert('Ошибка: ' + err.message));
           }
@@ -1649,7 +1696,6 @@
     if (currentUser) {
       const displayName = currentUserNickname || currentUser.email;
       const initial = displayName.charAt(0).toUpperCase();
-      // Иконка аватара
       if (currentUserAvatar) {
         avatarIcon.innerHTML = `<img src="${currentUserAvatar}" alt="">`;
       } else {
@@ -1659,7 +1705,7 @@
         <div class="dropdown-item" style="pointer-events:none;">
           <div style="min-width:0;">
             <div class="nickname">${escapeHtml(displayName)}</div>
-            <div class="email">${escapeHtml(currentUser.email)}</div>
+            <div class="email">${escapeHtml(currentUser.email || currentUser.phoneNumber || '')}</div>
             <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${currentUserRole}</div>
           </div>
         </div>
@@ -1673,7 +1719,6 @@
       dropdown.innerHTML = `<button class="dropdown-item" id="dropdownLogin">🔑 Войти</button>`;
     }
 
-    // Скрытый input для аватарки аккаунта
     let hiddenInput = document.getElementById('accountAvatarInput');
     if (!hiddenInput) {
       hiddenInput = document.createElement('input');
@@ -1747,7 +1792,7 @@
   }
 
   // ============================================================
-  //   ОБНОВЛЕНИЕ UI АУТЕНТИФИКАЦИИ
+  //   ОБНОВЛЕНИЕ UI
   // ============================================================
   function updateUIForAuth(loggedIn) {
     const statsBtn = document.getElementById('statsBtn');
@@ -1767,7 +1812,7 @@
   }
 
   // ============================================================
-  //   ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+  //   ВКЛАДКИ
   // ============================================================
   function initTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
@@ -1801,7 +1846,7 @@
   }
 
   // ============================================================
-  //   ОБРАБОТЧИКИ СОБЫТИЙ
+  //   ОБРАБОТЧИКИ
   // ============================================================
   document.addEventListener('DOMContentLoaded', function() {
     initMainSliders();
@@ -1843,7 +1888,9 @@
     });
     criteriaModal.addEventListener('click', (e) => { if (e.target === criteriaModal) { criteriaModal.classList.remove('active'); document.body.style.overflow = ''; } });
 
-    // Модалка входа
+    // ============================================================
+    //   МОДАЛКА ВХОДА (Email + Phone)
+    // ============================================================
     const authModal = document.getElementById('authModal');
     const closeAuthBtn = document.getElementById('closeAuthBtn');
     const authLoginBtn = document.getElementById('authLoginBtn');
@@ -1853,9 +1900,29 @@
     const authNickname = document.getElementById('authNickname');
     const authMessage = document.getElementById('authMessage');
 
+    const authMethodTabs = document.querySelectorAll('.auth-method-tab');
+    const authFormEmail = document.getElementById('authFormEmail');
+    const authFormPhone = document.getElementById('authFormPhone');
+    authMethodTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        authMethodTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const method = tab.dataset.method;
+        if (method === 'email') {
+          authFormEmail.style.display = 'flex';
+          authFormPhone.style.display = 'none';
+        } else {
+          authFormEmail.style.display = 'none';
+          authFormPhone.style.display = 'flex';
+        }
+        authMessage.textContent = '';
+      });
+    });
+
     closeAuthBtn.addEventListener('click', () => authModal.classList.remove('active'));
     authModal.addEventListener('click', (e) => { if (e.target === authModal) authModal.classList.remove('active'); });
 
+    // Email: вход
     authLoginBtn.addEventListener('click', () => {
       const email = authEmail.value.trim();
       const pass = authPassword.value.trim();
@@ -1874,6 +1941,7 @@
         });
     });
 
+    // Email: регистрация
     authRegisterBtn.addEventListener('click', () => {
       const email = authEmail.value.trim();
       const pass = authPassword.value.trim();
@@ -1894,6 +1962,117 @@
         });
     });
 
+    // Phone: отправка кода
+    let recaptchaVerifier = null;
+    let confirmationResult = null;
+
+    const authPhone = document.getElementById('authPhone');
+    const authPhoneSendBtn = document.getElementById('authPhoneSendBtn');
+    const phoneCodeSection = document.getElementById('phoneCodeSection');
+    const authPhoneCode = document.getElementById('authPhoneCode');
+    const authPhoneNickname = document.getElementById('authPhoneNickname');
+    const authPhoneVerifyBtn = document.getElementById('authPhoneVerifyBtn');
+    const authPhoneBackBtn = document.getElementById('authPhoneBackBtn');
+
+    function setupRecaptcha() {
+      if (!recaptchaVerifier) {
+        recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+          size: 'invisible',
+          callback: () => {}
+        });
+      }
+    }
+
+    function normalizePhone(input) {
+      let digits = input.replace(/\D/g, '');
+      if (digits.startsWith('8') && digits.length === 11) digits = '7' + digits.slice(1);
+      if (digits.length === 10) digits = '7' + digits;
+      if (!digits.startsWith('7') && digits.length === 11) digits = '7' + digits.slice(1);
+      return '+' + digits;
+    }
+
+    authPhoneSendBtn.addEventListener('click', async () => {
+      const raw = authPhone.value.trim();
+      if (!raw) { authMessage.textContent = 'Введите номер телефона'; return; }
+      const phone = normalizePhone(raw);
+      authMessage.textContent = '';
+      authPhoneSendBtn.textContent = '⏳ Отправка...';
+      authPhoneSendBtn.disabled = true;
+
+      try {
+        setupRecaptcha();
+        confirmationResult = await auth.signInWithPhoneNumber(phone, recaptchaVerifier);
+        phoneCodeSection.style.display = 'flex';
+        authPhoneSendBtn.style.display = 'none';
+        authPhone.disabled = true;
+        authMessage.style.color = '#10b981';
+        authMessage.textContent = 'Код отправлен на ' + phone;
+        setTimeout(() => { authMessage.style.color = '#ef4444'; authMessage.textContent = ''; }, 5000);
+      } catch (err) {
+        console.error(err);
+        let msg = err.message;
+        if (err.code === 'auth/invalid-phone-number') msg = 'Некорректный номер телефона';
+        else if (err.code === 'auth/too-many-requests') msg = 'Слишком много попыток. Попробуйте позже';
+        authMessage.textContent = 'Ошибка: ' + msg;
+        authPhoneSendBtn.textContent = '📨 Отправить код';
+        authPhoneSendBtn.disabled = false;
+      }
+    });
+
+    // Phone: подтверждение
+    authPhoneVerifyBtn.addEventListener('click', async () => {
+      const code = authPhoneCode.value.trim();
+      if (!code || code.length < 4) { authMessage.textContent = 'Введите код из SMS'; return; }
+      if (!confirmationResult) { authMessage.textContent = 'Сначала отправьте код'; return; }
+      authMessage.textContent = '';
+      authPhoneVerifyBtn.textContent = '⏳ Проверка...';
+      authPhoneVerifyBtn.disabled = true;
+
+      try {
+        const result = await confirmationResult.confirm(code);
+        const user = result.user;
+        const doc = await db.collection('users').doc(user.uid).get();
+        if (!doc.exists) {
+          const nickname = authPhoneNickname.value.trim() || 'Без ника';
+          await db.collection('users').doc(user.uid).set({
+            email: user.phoneNumber || '',
+            phone: user.phoneNumber || '',
+            nickname: nickname,
+            role: 'user',
+            avatar: null
+          });
+        }
+        authModal.classList.remove('active');
+        authPhone.value = '';
+        authPhoneCode.value = '';
+        authPhoneNickname.value = '';
+        phoneCodeSection.style.display = 'none';
+        authPhoneSendBtn.style.display = 'inline-flex';
+        authPhoneSendBtn.textContent = '📨 Отправить код';
+        authPhoneSendBtn.disabled = false;
+        authPhone.disabled = false;
+        confirmationResult = null;
+      } catch (err) {
+        console.error(err);
+        let msg = err.message;
+        if (err.code === 'auth/invalid-verification-code') msg = 'Неверный код';
+        else if (err.code === 'auth/code-expired') msg = 'Код истёк, запросите новый';
+        authMessage.textContent = 'Ошибка: ' + msg;
+        authPhoneVerifyBtn.textContent = '✅ Подтвердить код';
+        authPhoneVerifyBtn.disabled = false;
+      }
+    });
+
+    authPhoneBackBtn.addEventListener('click', () => {
+      phoneCodeSection.style.display = 'none';
+      authPhoneSendBtn.style.display = 'inline-flex';
+      authPhoneSendBtn.textContent = '📨 Отправить код';
+      authPhoneSendBtn.disabled = false;
+      authPhone.disabled = false;
+      confirmationResult = null;
+      authMessage.textContent = '';
+    });
+
     // Статистика
     document.getElementById('statsBtn').addEventListener('click', showStats);
     document.getElementById('closeStatsBtn').addEventListener('click', () => {
@@ -1910,11 +2089,11 @@
         const doc = await db.collection('users').doc(user.uid).get();
         if (doc.exists) {
           currentUserRole = doc.data().role || 'user';
-          currentUserNickname = doc.data().nickname || user.email;
+          currentUserNickname = doc.data().nickname || user.email || user.phoneNumber || 'Пользователь';
           currentUserAvatar = doc.data().avatar || null;
         } else {
           currentUserRole = 'user';
-          currentUserNickname = user.email;
+          currentUserNickname = user.email || user.phoneNumber || 'Пользователь';
           currentUserAvatar = null;
         }
         updateUIForAuth(true);
@@ -1926,7 +2105,6 @@
         currentUserAvatar = null;
         updateUIForAuth(false);
         loadAllCards();
-        // Показать модалку входа при первом входе
         if (!authModalShown) {
           authModalShown = true;
           setTimeout(() => openAuthModal(), 500);
