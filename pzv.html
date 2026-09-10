@@ -1573,7 +1573,7 @@
               </span>
               <span class="param-value" id="modal-value-${idx}">5.0</span>
             </div>
-            <input type="range" id="modal-slider-${idx}" min="0" max="10" step="0.5" value="5">
+            <input type="range" id="modal-slider-${idx}" min="0" max="10" step="1" value="5">
           `;
           rows[item.row].appendChild(cardDiv);
           const slider = document.getElementById(`modal-slider-${idx}`);
@@ -1650,7 +1650,7 @@
     document.getElementById('creatorTitle').textContent = '✏️ Редактирование карточки';
     document.getElementById('cardName').value = card.name;
     card.values.forEach((v, i) => {
-      const val = Math.min(10, Math.max(0, Math.round(v * 2) / 2));
+      const val = Math.min(10, Math.max(0, Math.round(v)));
       sliders[i].value = val;
       const valSpan = document.getElementById(`value-${i}`);
       if (valSpan) valSpan.textContent = val.toFixed(1);
@@ -1802,7 +1802,7 @@
           </span>
           <span class="param-value" id="value-${idx}">5.0</span>
         </div>
-        <input type="range" id="slider-${idx}" min="0" max="10" step="0.5" value="5">
+        <input type="range" id="slider-${idx}" min="0" max="10" step="1" value="5">
       `;
       rows[item.row].appendChild(card);
       const slider = document.getElementById(`slider-${idx}`);
