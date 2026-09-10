@@ -776,114 +776,189 @@
       .account-dropdown { right: 0; left: auto; }
     }
 
+    /* ===== МОБИЛЬНАЯ ВЕРСИЯ (СТОЛБИК) ===== */
     @media (max-width: 600px) {
       body { padding: 8px; }
-      .container { padding: 14px; border-radius: 20px; }
-      .header h1 { font-size: 17px; }
+      .container { padding: 16px; border-radius: 20px; }
+      .header h1 { font-size: 18px; }
       .header-actions { gap: 6px; }
-      .btn-info { padding: 7px 14px; font-size: 13px; }
-      .theme-toggle { font-size: 20px; padding: 2px 8px; }
-      .account-menu .avatar-icon { width: 38px; height: 38px; font-size: 18px; }
+      .btn-info { padding: 8px 14px; font-size: 14px; }
+      .theme-toggle { font-size: 22px; padding: 2px 8px; }
+      .account-menu .avatar-icon { width: 42px; height: 42px; font-size: 18px; }
 
+      /* ПИРАМИДА → СТОЛБИК */
       .pyramid-row {
-        flex-direction: row;
-        gap: 6px;
-        margin-bottom: 8px;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 14px;
       }
-      .row-top { max-width: 100%; }
-      .row-mid { max-width: 82%; }
-      .row-bottom { max-width: 58%; }
+      .row-top,
+      .row-mid,
+      .row-bottom {
+        max-width: 100%;
+        width: 100%;
+      }
 
       .param-card {
-        padding: 8px 6px;
-        border-radius: 10px;
+        padding: 16px 18px;
+        border-radius: 14px;
       }
-      .param-card.corrector { padding: 10px 8px; }
-      .param-header { font-size: 11px; gap: 3px; margin-bottom: 2px; }
-      .param-name > span:first-child { font-size: 11px; }
-      .badge-corrector { display: none; }
-      .param-value { font-size: 12px; min-width: 22px; }
-      input[type="range"] { margin-top: 2px; height: 8px; }
-      input[type="range"]::-webkit-slider-thumb { height: 20px; width: 20px; margin-top: -8px; }
-      input[type="range"]::-moz-range-thumb { height: 20px; width: 20px; }
+      .param-card.corrector {
+        padding: 18px 20px;
+      }
+      .param-header {
+        font-size: 16px;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .param-name > span:first-child {
+        font-size: 16px;
+      }
+      .badge-corrector {
+        display: inline-block;
+        font-size: 11px;
+        padding: 3px 9px;
+        margin-left: 8px;
+      }
+      .param-value {
+        font-size: 17px;
+        min-width: 36px;
+      }
 
-      .breakdown { grid-template-columns: 1fr; font-size: 13px; gap: 2px; }
-      .result-score { font-size: 34px; }
-      .result-area { padding: 14px 18px; }
-      .result-label { font-size: 16px; }
+      input[type="range"] {
+        height: 14px;
+        margin-top: 8px;
+      }
+      input[type="range"]::-webkit-slider-runnable-track { height: 8px; }
+      input[type="range"]::-webkit-slider-thumb {
+        height: 30px;
+        width: 30px;
+        margin-top: -11px;
+      }
+      input[type="range"]::-moz-range-track { height: 8px; }
+      input[type="range"]::-moz-range-thumb {
+        height: 30px;
+        width: 30px;
+      }
 
-      .tabs { padding: 3px; gap: 2px; }
-      .tab-btn { padding: 8px 10px; font-size: 13px; }
+      .breakdown { grid-template-columns: 1fr; font-size: 14px; gap: 3px; padding: 14px 18px; }
+      .result-score { font-size: 40px; }
+      .result-area { padding: 16px 22px; }
+      .result-label { font-size: 18px; }
+
+      .tabs { padding: 4px; gap: 3px; }
+      .tab-btn { padding: 9px 12px; font-size: 14px; }
 
       .cards-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .card-item { padding: 10px; }
-      .card-item .avatar { width: 56px; height: 56px; margin-bottom: 6px; }
-      .card-item .avatar-placeholder { width: 56px; height: 56px; font-size: 22px; margin-bottom: 6px; }
-      .card-item .item-name { font-size: 14px; }
-      .card-item .item-score { font-size: 18px; }
-      .card-item .btn-sm { font-size: 12px; padding: 6px 10px; min-height: 36px; }
+      .card-item { padding: 12px 10px; }
+      .card-item .avatar { width: 60px; height: 60px; margin-bottom: 8px; }
+      .card-item .avatar-placeholder { width: 60px; height: 60px; font-size: 24px; margin-bottom: 8px; }
+      .card-item .item-name { font-size: 15px; }
+      .card-item .item-creator { font-size: 12px; }
+      .card-item .item-score { font-size: 20px; }
+      .card-item .item-meta { font-size: 12px; }
+      .card-item .btn-sm { font-size: 13px; padding: 8px 12px; min-height: 40px; }
 
-      .card-creator { padding: 12px; }
-      .card-creator-fields { gap: 10px; }
+      .card-creator { padding: 14px; }
+      .card-creator-fields { gap: 12px; }
       .card-creator-actions { flex-direction: column; }
       .card-creator-actions .btn { width: 100%; justify-content: center; }
-      .file-upload-wrapper { flex-wrap: nowrap; }
-      .file-upload-label { padding: 10px 14px; font-size: 14px; height: 44px; }
-      .file-name { font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100px; }
+      .file-upload-wrapper { flex-wrap: wrap; }
+      .file-upload-label { padding: 12px 18px; font-size: 15px; min-height: 48px; }
+      .file-name { font-size: 13px; }
 
-      .modal-content { padding: 16px; border-radius: 20px; }
-      .modal-content h2 { font-size: 18px; padding-bottom: 8px; }
-      .modal-close { font-size: 24px; }
+      .modal-content { padding: 18px; border-radius: 20px; max-height: 95vh; }
+      .modal-content h2 { font-size: 19px; padding-bottom: 10px; }
+      .modal-close { font-size: 26px; }
 
       .score-cards { grid-template-columns: 1fr; gap: 8px; }
-      .score-card { padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
-      .score-card .score-label { margin-bottom: 0; font-size: 13px; }
-      .score-card .score-value { font-size: 24px; }
+      .score-card { padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+      .score-card .score-label { margin-bottom: 0; font-size: 14px; }
+      .score-card .score-value { font-size: 26px; }
 
-      .top-item { padding: 10px; gap: 8px; }
-      .top-item .place { font-size: 18px; min-width: 26px; }
-      .top-item .top-avatar { width: 44px; height: 44px; font-size: 18px; }
-      .top-item .top-name { font-size: 14px; }
-      .top-item .top-score { font-size: 18px; }
+      /* Мини-калькулятор в модалке → столбик */
+      .modal-calc .pyramid-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .modal-calc .row-top,
+      .modal-calc .row-mid,
+      .modal-calc .row-bottom {
+        max-width: 100%;
+      }
+      .modal-calc .param-card {
+        padding: 14px 16px;
+        border-radius: 12px;
+      }
+      .modal-calc .param-header { font-size: 15px; margin-bottom: 8px; gap: 6px; }
+      .modal-calc .param-name > span:first-child { font-size: 15px; }
+      .modal-calc .param-value { font-size: 16px; min-width: 32px; }
+      .modal-calc .badge-corrector { display: inline-block; font-size: 10px; padding: 3px 8px; }
+      .modal-calc input[type="range"] { height: 12px; margin-top: 6px; }
+      .modal-calc input[type="range"]::-webkit-slider-runnable-track { height: 6px; }
+      .modal-calc input[type="range"]::-webkit-slider-thumb {
+        height: 26px; width: 26px; margin-top: -10px;
+      }
+      .modal-calc input[type="range"]::-moz-range-track { height: 6px; }
+      .modal-calc input[type="range"]::-moz-range-thumb {
+        height: 26px; width: 26px;
+      }
+      .modal-calc .result-score { font-size: 32px; }
+      .modal-calc .result-label { font-size: 17px; }
+
+      .top-item { padding: 12px; gap: 10px; }
+      .top-item .place { font-size: 20px; min-width: 30px; }
+      .top-item .top-avatar { width: 50px; height: 50px; font-size: 20px; }
+      .top-item .top-name { font-size: 15px; }
+      .top-item .top-score { font-size: 20px; }
 
       .comment-header { flex-direction: column; align-items: flex-start; gap: 4px; }
-      .comment-item { padding: 8px 12px; }
+      .comment-item { padding: 10px 14px; }
 
-      .library-controls h2 { font-size: 18px; }
+      .library-controls h2 { font-size: 20px; }
       .sort-controls { width: 100%; }
       .sort-controls select { flex: 1; }
 
-      .rating-period-tab { font-size: 13px; padding: 8px 6px; }
+      .rating-period-tab { font-size: 14px; padding: 9px 8px; }
     }
 
     @media (max-width: 420px) {
-      .container { padding: 10px; border-radius: 16px; }
-      .header h1 { font-size: 14px; }
-      .btn-info { padding: 6px 10px; font-size: 12px; }
-      .theme-toggle { font-size: 18px; padding: 2px 6px; }
-      .account-menu .avatar-icon { width: 34px; height: 34px; font-size: 16px; }
+      .container { padding: 12px; border-radius: 16px; }
+      .header h1 { font-size: 15px; }
+      .btn-info { padding: 7px 11px; font-size: 13px; }
+      .theme-toggle { font-size: 20px; padding: 2px 6px; }
+      .account-menu .avatar-icon { width: 38px; height: 38px; font-size: 17px; }
 
-      .pyramid-row { gap: 4px; margin-bottom: 6px; }
-      .param-card { padding: 6px 4px; border-radius: 8px; }
-      .param-card.corrector { padding: 8px 6px; }
-      .param-header { font-size: 10px; gap: 2px; }
-      .param-name > span:first-child { font-size: 10px; }
-      .param-value { font-size: 11px; min-width: 18px; }
-      input[type="range"]::-webkit-slider-thumb { height: 18px; width: 18px; margin-top: -7px; }
-      input[type="range"]::-moz-range-thumb { height: 18px; width: 18px; }
+      .pyramid-row { gap: 12px; margin-bottom: 12px; }
+      .param-card { padding: 14px 16px; }
+      .param-card.corrector { padding: 16px 18px; }
+      .param-header { font-size: 15px; }
+      .param-name > span:first-child { font-size: 15px; }
+      .param-value { font-size: 16px; min-width: 32px; }
 
-      .result-score { font-size: 30px; }
-      .btn { padding: 10px 16px; font-size: 14px; min-height: 44px; }
+      input[type="range"]::-webkit-slider-thumb {
+        height: 28px; width: 28px; margin-top: -10px;
+      }
+      input[type="range"]::-moz-range-thumb {
+        height: 28px; width: 28px;
+      }
+
+      .result-score { font-size: 34px; }
+      .btn { padding: 12px 20px; font-size: 15px; min-height: 48px; }
 
       .cards-grid { grid-template-columns: 1fr; }
-      .card-item .btn-sm { font-size: 13px; padding: 8px 12px; min-height: 40px; }
+      .card-item .btn-sm { font-size: 14px; padding: 10px 14px; min-height: 44px; }
 
-      .tab-btn { padding: 6px 8px; font-size: 12px; }
+      .tab-btn { padding: 8px 10px; font-size: 13px; }
       .tabs { padding: 3px; }
 
       .modal-content { padding: 14px; }
-      .modal-content h2 { font-size: 16px; }
+      .modal-content h2 { font-size: 17px; }
       .comment-input { font-size: 14px; }
+
+      .modal-calc .param-header { font-size: 14px; }
+      .modal-calc .param-name > span:first-child { font-size: 14px; }
+      .modal-calc .param-value { font-size: 15px; min-width: 30px; }
     }
   </style>
 </head>
