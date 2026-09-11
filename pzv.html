@@ -765,7 +765,8 @@
       border-color: transparent;
     }
     .auth-input::placeholder { color: var(--text-muted); }
-    #recaptcha-container { min-height: 0; height: 0; overflow: hidden; }
+    /* Патч 1: убрали обрезку, чтобы reCAPTCHA нормально инициализировалась */
+    #recaptcha-container { min-height: 0; }
 
     /* ===== АДАПТИВ ===== */
     @media (max-width: 768px) {
@@ -2131,7 +2132,7 @@
     closeAuthBtn.addEventListener('click', () => authModal.classList.remove('active'));
     authModal.addEventListener('click', (e) => { if (e.target === authModal) authModal.classList.remove('active'); });
 
-    // Email: вход
+    // Email: вход (Патч 5: понятные сообщения)
     authLoginBtn.addEventListener('click', () => {
       const email = authEmail.value.trim();
       const pass = authPassword.value.trim();
@@ -2143,9 +2144,12 @@
           authEmail.value = ''; authPassword.value = ''; authNickname.value = '';
         })
         .catch(err => {
+          console.error('Login error:', err);
           let msg = err.message;
-          if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') msg = 'Неверный email или пароль';
+          if (err.code === 'auth/user-not-found') msg = 'Пользователь с таким email не найден. Возможно, вы регистрировались по телефону?';
+          else if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') msg = 'Неверный пароль. Проверьте раскладку и Caps Lock.';
           else if (err.code === 'auth/invalid-email') msg = 'Некорректный email';
+          else if (err.code === 'auth/too-many-requests') msg = 'Слишком много попыток. Подождите 5-10 минут или сбросьте пароль.';
           authMessage.textContent = 'Ошибка: ' + msg;
         });
     });
@@ -2192,6 +2196,15 @@
       }
     }
 
+    function resetRecaptcha() {
+      if (recaptchaVerifier) {
+        try { recaptchaVerifier.clear(); } catch(e) {}
+        recaptchaVerifier = null;
+      }
+      const c = document.getElementById('recaptcha-container');
+      if (c) c.innerHTML = '';
+    }
+
     function normalizePhone(input) {
       let digits = input.replace(/\D/g, '');
       if (digits.startsWith('8') && digits.length === 11) digits = '7' + digits.slice(1);
@@ -2204,6 +2217,7 @@
       const raw = authPhone.value.trim();
       if (!raw) { authMessage.textContent = 'Введите номер телефона'; return; }
       const phone = normalizePhone(raw);
+      authMessage.style.color = 'var(--error-color)';
       authMessage.textContent = '';
       authPhoneSendBtn.textContent = '⏳ Отправка...';
       authPhoneSendBtn.disabled = true;
@@ -2218,10 +2232,19 @@
         authMessage.textContent = 'Код отправлен на ' + phone;
         setTimeout(() => { authMessage.style.color = 'var(--error-color)'; authMessage.textContent = ''; }, 5000);
       } catch (err) {
-        console.error(err);
+        console.error('Phone auth error:', err);
+        // Патч 3: сбрасываем reCAPTCHA после ошибки
+        resetRecaptcha();
+
         let msg = err.message;
         if (err.code === 'auth/invalid-phone-number') msg = 'Некорректный номер телефона';
         else if (err.code === 'auth/too-many-requests') msg = 'Слишком много попыток. Попробуйте позже';
+        else if (err.code === 'auth/unauthorized-domain') msg = 'Домен не авторизован в Firebase (добавьте ваш домен в Authentication → Settings → Authorized domains)';
+        else if (err.code === 'auth/operation-not-allowed') msg = 'Phone-авторизация отключена в Firebase Console';
+        else if (err.code === 'auth/captcha-check-failed') msg = 'Ошибка reCAPTCHA, попробуйте ещё раз';
+        else if (err.code === 'auth/quota-exceeded') msg = 'Превышена квота SMS. Попробуйте позже';
+
+        authMessage.style.color = 'var(--error-color)';
         authMessage.textContent = 'Ошибка: ' + msg;
         authPhoneSendBtn.textContent = '📨 Отправить код';
         authPhoneSendBtn.disabled = false;
@@ -2260,6 +2283,8 @@
         authPhoneSendBtn.disabled = false;
         authPhone.disabled = false;
         confirmationResult = null;
+        // Патч 4: сбрасываем reCAPTCHA после успеха
+        resetRecaptcha();
       } catch (err) {
         console.error(err);
         let msg = err.message;
@@ -2279,6 +2304,7 @@
       authPhone.disabled = false;
       confirmationResult = null;
       authMessage.textContent = '';
+      resetRecaptcha();
     });
 
     // Статистика
@@ -2290,33 +2316,63 @@
       if (e.target === e.currentTarget) document.getElementById('statsModal').classList.remove('active');
     });
 
-    // Отслеживание состояния
+    // Патч 2: onAuthStateChanged с try/catch и автосозданием документа
     auth.onAuthStateChanged(async user => {
-      if (user) {
-        currentUser = user;
-        const doc = await db.collection('users').doc(user.uid).get();
-        if (doc.exists) {
-          currentUserRole = doc.data().role || 'user';
-          currentUserNickname = doc.data().nickname || user.email || user.phoneNumber || 'Пользователь';
-          currentUserAvatar = doc.data().avatar || null;
+      try {
+        if (user) {
+          currentUser = user;
+          let userData = null;
+          try {
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (doc.exists) {
+              userData = doc.data();
+            } else {
+              const newData = {
+                email: user.email || '',
+                phone: user.phoneNumber || '',
+                nickname: user.displayName || (user.email ? user.email.split('@')[0] : 'Пользователь'),
+                role: 'user',
+                avatar: null
+              };
+              try {
+                await db.collection('users').doc(user.uid).set(newData);
+                userData = newData;
+              } catch (writeErr) {
+                console.warn('Не удалось создать документ пользователя:', writeErr);
+                userData = newData;
+              }
+            }
+          } catch (readErr) {
+            console.warn('Не удалось прочитать документ пользователя:', readErr);
+            userData = {
+              email: user.email || '',
+              phone: user.phoneNumber || '',
+              nickname: user.email || user.phoneNumber || 'Пользователь',
+              role: 'user',
+              avatar: null
+            };
+          }
+
+          currentUserRole = userData.role || 'user';
+          currentUserNickname = userData.nickname || user.email || user.phoneNumber || 'Пользователь';
+          currentUserAvatar = userData.avatar || null;
+
+          updateUIForAuth(true);
+          loadAllCards();
         } else {
-          currentUserRole = 'user';
-          currentUserNickname = user.email || user.phoneNumber || 'Пользователь';
+          currentUser = null;
+          currentUserRole = null;
+          currentUserNickname = null;
           currentUserAvatar = null;
+          updateUIForAuth(false);
+          loadAllCards();
+          if (!authModalShown) {
+            authModalShown = true;
+            setTimeout(() => openAuthModal(), 500);
+          }
         }
-        updateUIForAuth(true);
-        loadAllCards();
-      } else {
-        currentUser = null;
-        currentUserRole = null;
-        currentUserNickname = null;
-        currentUserAvatar = null;
-        updateUIForAuth(false);
-        loadAllCards();
-        if (!authModalShown) {
-          authModalShown = true;
-          setTimeout(() => openAuthModal(), 500);
-        }
+      } catch (err) {
+        console.error('Критическая ошибка в onAuthStateChanged:', err);
       }
     });
 
